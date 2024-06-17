@@ -1,16 +1,9 @@
-#include<iostream>
-#include<algorithm>
-#define MaxSize 50
-#define ElemType int
-#define DataType int
-
 typedef struct {
 	ElemType data[MaxSize];
 	int length;
 	int maxsize = MaxSize;
 }Sqlist;
 
-using namespace std;
 
 bool Del_min(Sqlist& l, ElemType& value) {
 
@@ -150,8 +143,30 @@ void SameKey(int a[], int b[], int c[], int n) {
 	}
 }
 
-int main()
-{
-
-	return 0;
+//10
+//Reverse(0,n-1);
+//Reverse(p,n-1);
+//Reverse(0,p);
+//11
+int M_Search(int a[], int b[], int n) {
+	int count = 0;
+	int i = 0, j = 0;
+	int temp = 0;
+	while (count < n)
+	{
+		if (a[i] <= b[j]) {
+			temp = a[i];
+			i++;
+			count++;
+		}
+		else
+		{
+			temp = b[j];
+			j++;
+			count++;
+		}
+	}
+	return temp;
 }
+
+//12
