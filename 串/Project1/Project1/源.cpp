@@ -54,7 +54,39 @@ int StrCompare(SString a, SString b) {
 }
 //串连接
 void Concat(SString& a, SString b, SString c) {
-
+	a.length = b.length + c.length;
+	for (int i = 0;i < b.length;i++) {
+		a.ch[i] = b.ch[i];
+	}
+	for (int i = 0;i < c.length;i++) {
+		a.ch[i + b.length] = c.ch[i];
+	}
+}
+//获取next数组
+void get_next(SString t,int next[]) {
+	int i = 1, j = 0;
+	next[1] = 0;
+	while (i < t.length) {
+		if (j == 0 || t.ch[i] == t.ch[j]) {
+			++i, ++j;
+			next[i] = j;
+		}
+		else {
+			j = next[j];
+		}
+	}
+}
+//KMP
+int Index_KMP(SString s, SString t, int next[]) {
+	int i = 1, j = 1;
+	while (i < s.length && j < t.length) {
+		if (j == 0 || s.ch[i] == t.ch[j]) {
+			++i, ++j;
+		}
+		else j = next[j];
+	}
+	if (j > t.length) return i - t.length;
+	else return 0;
 }
 //输出串
 void ShowString(SString s)
@@ -72,9 +104,9 @@ void ShowString(SString s)
 int main()
 {
 	SString S, T, N, M, G, L;
-	char ch[] = { "hello world" };
-	char ch1[] = { "hello" };
-	char ch2[] = { "hello worldd" };
+	char ch[] = { "abaabcaba" };
+	char ch1[] = { "bc" };
+	char ch2[] = { "helloworld" };
 	StrAssign(S, ch);
 	StrAssign(N, ch1);
 	StrAssign(M, ch2);
@@ -83,5 +115,9 @@ int main()
 	cout << "将一s复制到另外一个:";StrCopy(T, S);ShowString(T);
 	cout << "比较串的大小：0代表相等，1代表第一个串比第二个串大，-1代表第一个串比第二个串小";
 	cout << "S an T:" << StrCompare(S, T) << endl;
+	cout << "将N串和M串连接成新串G" << endl;Concat(G, N, M);ShowString(G);
+	int ans[1001];
+	get_next(S, ans);
+	cout << "(KMP模式匹配算法)子串L在主串S中的位置为:" << Index_KMP(S, N, ans) << endl;
 	return 0;
 }
