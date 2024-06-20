@@ -17,12 +17,26 @@ typedef struct snode
 } LiString;
 //赋值操作
 void StrAssign(SString& s, char chs[]) {
-	s.length = 0;
-	for (int i = 0;chs[i] != '\0';i++) {
+	int i = 0;
+	while(chs[i] != '\0') {
 		s.ch[i] = chs[i];
-		s.length++;
+		++i;
 	}
+	s.length = i;
 	//cout << endl << s.length;
+}
+//输出串
+void ShowString(SString s)
+{
+	if (s.length == 0)
+	{
+		cout << "当前串为空！" << endl;
+	}
+	for (int i = 0; i < s.length; i++)
+	{
+		cout << s.ch[i];
+	}
+	cout << endl;
 }
 //复制
 void StrCopy(SString& s1, SString& s2) {
@@ -64,43 +78,47 @@ void Concat(SString& a, SString b, SString c) {
 }
 //获取next数组
 void get_next(SString t,int next[]) {
-	int i = 1, j = 0;
+	cout << "原字符串:";ShowString(t);cout << "字符串长度:" << t.length << endl;
+	int i, j;
+	i = 1;
+	j = 0;
 	next[1] = 0;
-	while (i < t.length) {
-		if (j == 0 || t.ch[i] == t.ch[j]) {
-			++i, ++j;
+	while (i < t.length)
+	{
+		if (j == 0 || t.ch[i - 1] == t.ch[j - 1])
+		{
+			++i;
+			++j;
 			next[i] = j;
 		}
-		else {
+		else
 			j = next[j];
-		}
 	}
 }
 //KMP
-int Index_KMP(SString s, SString t, int next[]) {
-	int i = 1, j = 1;
-	while (i < s.length && j < t.length) {
-		if (j == 0 || s.ch[i] == t.ch[j]) {
-			++i, ++j;
+int Index_KMP(SString s, SString t, int pos) {
+	int i = pos;
+	int j = 0;
+	int next[255];
+	get_next(t, next);
+	while (i <= s.length && j <= t.length)
+	{
+		if (j == 0 || s.ch[i] == t.ch[j])
+		{
+			++i;
+			++j;
 		}
-		else j = next[j];
+		else
+		{
+			j = next[j];
+		}
 	}
-	if (j > t.length) return i - t.length;
-	else return 0;
+	if (j > t.length)
+		return i - t.length;
+	else
+		return 0;
 }
-//输出串
-void ShowString(SString s)
-{
-	if (s.length == 0)
-	{
-		cout << "当前串为空！" << endl;
-	}
-	for (int i = 0; i < s.length; i++)
-	{
-		cout << s.ch[i];
-	}
-	cout << endl;
-}
+
 int main()
 {
 	SString S, T, N, M, G, L;
@@ -116,8 +134,10 @@ int main()
 	cout << "比较串的大小：0代表相等，1代表第一个串比第二个串大，-1代表第一个串比第二个串小";
 	cout << "S an T:" << StrCompare(S, T) << endl;
 	cout << "将N串和M串连接成新串G" << endl;Concat(G, N, M);ShowString(G);
-	int ans[1001];
-	get_next(S, ans);
-	cout << "(KMP模式匹配算法)子串L在主串S中的位置为:" << Index_KMP(S, N, ans) << endl;
+	/*int ans[1001];
+	get_next(S, ans);*/
+	cout << "KMP字串:";
+	ShowString(N);
+	cout << "(KMP模式匹配算法)子串L在主串S中的位置为:" << Index_KMP(S, N,1) << endl;
 	return 0;
 }
